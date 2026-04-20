@@ -1,96 +1,84 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>College Website</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header>
-    <h1>Pragati Engineering College</h1>
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Courses</a>
-        <a href="#">Contact</a>
-    </nav>
-</header>
-
-<section>
-    <h2>Welcome to Our College</h2>
-    <p>Learn, Grow, and Succeed 🚀</p>
-</section>
-
-<footer>
-    <p>© 2026 College Website</p>
-</footer>
-
-</body>
-</html>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #f4f4f4;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 15px;
-    text-align: center;
-}
-
-nav a {
-    color: white;
-    margin: 10px;
-    text-decoration: none;
-}
-
-section {
-    padding: 20px;
-    text-align: center;
-}
-
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
 #include <stdio.h>
+#include <stdlib.h>
 
-int main() {
-    FILE *fp;
+struct Student {
+    int id;
     char name[50];
     int age;
     char course[50];
+};
 
-    fp = fopen("data.txt", "a");
+void addStudent() {
+    FILE *fp = fopen("students.txt", "a");
+    struct Student s;
 
     if (fp == NULL) {
         printf("Error opening file!\n");
-        return 1;
+        return;
     }
 
-    printf("Enter Student Name: ");
-    scanf("%s", name);
+    printf("\nEnter ID: ");
+    scanf("%d", &s.id);
+
+    printf("Enter Name: ");
+    scanf("%s", s.name);
 
     printf("Enter Age: ");
-    scanf("%d", &age);
+    scanf("%d", &s.age);
 
     printf("Enter Course: ");
-    scanf("%s", course);
+    scanf("%s", s.course);
 
-    fprintf(fp, "Name: %s | Age: %d | Course: %s\n", name, age, course);
-
+    fprintf(fp, "%d %s %d %s\n", s.id, s.name, s.age, s.course);
     fclose(fp);
 
-    printf("Data Saved Successfully!\n");
+    printf("Student added successfully!\n");
+}
+
+void viewStudents() {
+    FILE *fp = fopen("students.txt", "r");
+    struct Student s;
+
+    if (fp == NULL) {
+        printf("No records found!\n");
+        return;
+    }
+
+    printf("\n--- Student Records ---\n");
+
+    while (fscanf(fp, "%d %s %d %s", &s.id, s.name, &s.age, s.course) != EOF) {
+        printf("ID: %d | Name: %s | Age: %d | Course: %s\n", s.id, s.name, s.age, s.course);
+    }
+
+    fclose(fp);
+}
+
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\n--- College Management System ---\n");
+        printf("1. Add Student\n");
+        printf("2. View Students\n");
+        printf("3. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addStudent();
+                break;
+            case 2:
+                viewStudents();
+                break;
+            case 3:
+                printf("Exiting program...\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
 
     return 0;
 }
-gcc student.c -o student
-./student
